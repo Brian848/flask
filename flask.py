@@ -1,4 +1,3 @@
-
 from flask import Flask, request
 from flask_pymongo import PyMongo
 from bson.json_util import dumps
@@ -39,6 +38,36 @@ def update_player(id):
 def delete_player(id):
     mongo.db.player_data.delete_one({'_id': ObjectId(id)})
     return dumps({'message': 'Player deleted successfully'})
+
+
+@app.route('/get_max_touchdowns', methods=['GET'])
+def get_max_touchdowns():
+    player = mongo.db.player_data.find().sort("touchdown_passes", -1).limit(1)
+    return dumps(player)
+
+
+@app.route('/get_max_rushing_yards', methods=['GET'])
+def get_max_rushing_yards():
+    player = mongo.db.player_data.find().sort("rushing_yards", -1).limit(1)
+    return dumps(player)
+
+
+@app.route('/get_min_rushing_yards', methods=['GET'])
+def get_min_rushing_yards():
+    player = mongo.db.player_data.find().sort("rushing_yards", 1).limit(1)
+    return dumps(player)
+
+
+@app.route('/get_field_goals', methods=['GET'])
+def get_field_goals():
+    players = mongo.db.player_data.find().sort("field_goals", -1)
+    return dumps(players)
+
+
+@app.route('/get_max_sacks', methods=['GET'])
+def get_max_sacks():
+    player = mongo.db.player_data.find().sort("sacks", -1).limit(1)
+    return dumps(player)
 
 
 if __name__ == '__main__':
